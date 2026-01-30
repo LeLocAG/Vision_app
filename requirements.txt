@@ -1,0 +1,5 @@
+google-generativeai
+Pillow
+keyboard
+deep-translator
+pytesseract

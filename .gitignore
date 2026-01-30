@@ -1,0 +1,10 @@
+# Bỏ qua file chứa khóa bí mật
+api_key.txt
+
+# Bỏ qua file thực thi nặng (người khác có thể tự build từ code)
+*.exe
+Vision_Translator.exe
+
+# Bỏ qua các file rác hệ thống
+__pycache__/
+*.pyc
