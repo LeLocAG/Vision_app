@@ -23,9 +23,9 @@ jobs:
           pip install pyinstaller
 
       - name: Đóng gói EXE
-        # Lưu ý: Windows dùng dấu chấm phẩy (;) để ngăn cách file ảnh
+        # Đã xóa đoạn --add-data ảnh nền để tránh lỗi
         run: |
-          pyinstaller --noconfirm --onefile --windowed --name "VisionTranslator" --add-data "header_bg.png;." main.py
+          pyinstaller --noconfirm --onefile --windowed --name "VisionTranslator" main.py
 
       - name: Tải lên Artifact (EXE)
         uses: actions/upload-artifact@v4
@@ -53,9 +53,9 @@ jobs:
           pip install pyinstaller
 
       - name: Đóng gói APP
-        # Lưu ý: Mac dùng dấu hai chấm (:) để ngăn cách file ảnh
+        # Đã xóa đoạn --add-data ảnh nền để tránh lỗi
         run: |
-          pyinstaller --noconfirm --windowed --name "VisionTranslator" --add-data "header_bg.png:." main.py
+          pyinstaller --noconfirm --windowed --name "VisionTranslator" main.py
 
       # Mac cần nén file .app lại thì mới tải về được trọn vẹn
       - name: Nén file APP thành ZIP
