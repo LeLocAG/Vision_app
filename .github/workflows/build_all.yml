@@ -1,0 +1,70 @@
+name: Build App Multi-Platform
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: # Cho phép bấm nút chạy thủ công
+
+jobs:
+  # --- CÔNG VIỆC 1: XÂY DỰNG CHO WINDOWS ---
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cài đặt Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Cài thư viện
+        run: |
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Đóng gói EXE
+        # Lưu ý: Windows dùng dấu chấm phẩy (;) để ngăn cách file ảnh
+        run: |
+          pyinstaller --noconfirm --onefile --windowed --name "VisionTranslator" --add-data "header_bg.png;." main.py
+
+      - name: Tải lên Artifact (EXE)
+        uses: actions/upload-artifact@v4
+        with:
+          name: VisionTranslator-Windows
+          path: dist/VisionTranslator.exe
+
+  # --- CÔNG VIỆC 2: XÂY DỰNG CHO MACOS ---
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cài đặt Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Cài Tesseract (Để test môi trường)
+        run: brew install tesseract
+
+      - name: Cài thư viện
+        run: |
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Đóng gói APP
+        # Lưu ý: Mac dùng dấu hai chấm (:) để ngăn cách file ảnh
+        run: |
+          pyinstaller --noconfirm --windowed --name "VisionTranslator" --add-data "header_bg.png:." main.py
+
+      # Mac cần nén file .app lại thì mới tải về được trọn vẹn
+      - name: Nén file APP thành ZIP
+        run: |
+          cd dist
+          zip -r VisionTranslator-Mac.zip VisionTranslator.app
+
+      - name: Tải lên Artifact (Mac Zip)
+        uses: actions/upload-artifact@v4
+        with:
+          name: VisionTranslator-Mac
+          path: dist/VisionTranslator-Mac.zip
